@@ -18,9 +18,22 @@ terraform {
   }
 }
 
-module "dev-network" {
+/*module "dev-network" {
   source      = "git@github.com:konstantinTarletski/aws_terraform_modules.git//network"
   environment = "dev"
+  default_tags = {
+    Manufactor = "terraform",
+    Design     = "tarlekon",
+    Source     = "module"
+  }
+}*/
+
+module "dev-ecr-repo" {
+  source      = "git@github.com:konstantinTarletski/aws_terraform_modules.git//ecr_and_iam_role"
+  ecr_repository_name = "game-sys-test-task"
+  git-repository-name = "game-sys-test-task"
+  git-repository-owner = "konstantinTarletski"
+  git-repository-token-link = "https://token.actions.githubusercontent.com"
   default_tags = {
     Manufactor = "terraform",
     Design     = "tarlekon",
