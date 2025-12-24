@@ -18,7 +18,14 @@ terraform {
   }
 }
 
-module "dev-network" {
+locals {
+  ecr_repository_name = "game-sys-test-task"
+  git_repository_name = "game-sys-test-task"
+}
+
+data "aws_region" "current" {}
+
+module "dev_network" {
   source                = "git@github.com:konstantinTarletski/aws_terraform_modules.git//network"
   environment           = "dev"
   db_subnets_cidrs      = []
@@ -31,10 +38,10 @@ module "dev-network" {
   }
 }
 
-module "dev-ecr-repo" {
+module "dev_ecr_repo" {
   source                    = "git@github.com:konstantinTarletski/aws_terraform_modules.git//ecr_and_iam_role"
-  ecr_repository_name       = "game-sys-test-task"
-  git_repository_name       = "game-sys-test-task"
+  ecr_repository_name       = local.ecr_repository_name
+  git_repository_name       = local.git_repository_name
   git_repository_owner      = "konstantinTarletski"
   git_repository_token_link = "https://token.actions.githubusercontent.com"
   ecr_force_delete          = true
@@ -45,167 +52,15 @@ module "dev-ecr-repo" {
   }
 }
 
-
-data "aws_region" "current" {}
-
-resource "aws_ecs_cluster" "main" {
-  name = "demo-cluster"
-}
-
-data "aws_caller_identity" "current" {}
-
-resource "aws_cloudwatch_log_group" "ecs_logs" {
-  name              = "/ecs/game-sys-task"
-  retention_in_days = 7
-}
-
-resource "aws_security_group" "ecs_public_sg" {
-  name        = "allow-app-access"
-  description = "Allow inbound access to my Java app"
-  vpc_id      = module.dev-network.vpc_id
-
-  ingress {
-    from_port   = 8080 //TODO TOMCAT
-    to_port     = 8080
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-}
-
-# 3. СТРОГАЯ РОЛЬ КЛЮЧНИКА (Execution Role)
-resource "aws_iam_role" "ecs_exec_role" {
-  name = "game-sys-ecs-execution-role"
-
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [{
-      Action = "sts:AssumeRole"
-      Effect = "Allow"
-      Principal = { Service = "ecs-tasks.amazonaws.com" }
-    }]
-  })
-}
-
-# Прямая политика: разрешаем только ОДИН репозиторий ECR
-resource "aws_iam_policy" "strict_ecr_pull" {
-  name = "StrictECRPullPolicy"
-
-  policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        # Разрешаем скачивать образы ТОЛЬКО из этого репозитория
-        Action = [
-          "ecr:BatchCheckLayerAvailability",
-          "ecr:GetDownloadUrlForLayer",
-          "ecr:BatchGetImage"
-        ]
-        Effect   = "Allow"
-        Resource = "*"
-        //TODO FIXME Uncomment
-        //Resource = "arn:aws:ecr:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:repository/game-sys-test-task"
-      },
-      {
-        # Общее разрешение на получение токена авторизации (нельзя ограничить по ресурсу)
-        Action   = "ecr:GetAuthorizationToken"
-        Effect   = "Allow"
-        Resource = "*"
-      },
-      {
-        # Разрешаем писать логи в нашу группу
-        Action = [
-          "logs:CreateLogStream",
-          "logs:PutLogEvents"
-        ]
-        Effect   = "Allow"
-        Resource = "${aws_cloudwatch_log_group.ecs_logs.arn}:*"
-      }
-    ]
-  })
-}
-
-resource "aws_iam_role_policy_attachment" "attach_strict_pull" {
-  role       = aws_iam_role.ecs_exec_role.name
-  policy_arn = aws_iam_policy.strict_ecr_pull.arn
-}
-
-# 4. ПРАВА ДЛЯ GITHUB (Деплоер)
-resource "aws_iam_policy" "github_deploy_policy" {
-  name = "GithubDeployOnly"
-
-  policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        # Разрешаем создавать новые версии чертежей
-        Action   = "ecs:RegisterTaskDefinition"
-        Effect   = "Allow"
-        Resource = "*"
-      },
-      {
-        # Доверенность (PassRole): Разрешаем GitHub ПЕРЕДАВАТЬ роль Ключника
-        Action   = "iam:PassRole"
-        Effect   = "Allow"
-        Resource = aws_iam_role.ecs_exec_role.arn
-      }
-    ]
-  })
-}
-
-# Привязываем к вашей существующей роли GitHub
-resource "aws_iam_role_policy_attachment" "attach_github" {
-  role       = "ecr-pusher_repo_game-sys-test-task" # Имя вашей роли
-  policy_arn = aws_iam_policy.github_deploy_policy.arn
-}
-
-# 5. TASK DEFINITION (Чертеж)
-resource "aws_ecs_task_definition" "app" {
-  family                   = "game-sys-task"
-  network_mode             = "awsvpc"
-  requires_compatibilities = ["FARGATE"]
-  cpu                      = "256"
-  memory                   = "512"
-  execution_role_arn       = aws_iam_role.ecs_exec_role.arn
-
-  container_definitions = jsonencode([
-    {
-      name      = "app"
-      image     = "tomcat:latest"
-      essential = true
-      portMappings = [{
-        containerPort = 8080
-        hostPort      = 8080
-      }]
-      logConfiguration = {
-        logDriver = "awslogs"
-        options = {
-          "awslogs-group"         = aws_cloudwatch_log_group.ecs_logs.name
-          "awslogs-region"        = data.aws_region.current.id
-          "awslogs-stream-prefix" = "ecs"
-        }
-      }
-    }
-  ])
-}
-
-resource "aws_ecs_service" "main" {
-  name            = "game-sys-service"
-  cluster         = aws_ecs_cluster.main.id
-  task_definition = aws_ecs_task_definition.app.arn
-  desired_count   = 1           # Сколько копий приложения запустить
-  launch_type     = "FARGATE"
-
-  network_configuration {
-    subnets = module.dev-network.public_subnets_ids
-    //В настройках подсети есть галочка "Auto-assign public IPv4", но для Fargate она игнорируется.
-    assign_public_ip = true     # Чтобы вы могли зайти на него из браузера
-    security_groups  = [aws_security_group.ecs_public_sg.id]
-  }
+module "dev_ecs_service" {
+  source = "git@github.com:konstantinTarletski/aws_terraform_modules.git//ecs_service_and_iam_roles"
+  application_name = local.git_repository_name
+  aws_cloudwatch_log_group = "/ecs/game-sys-test-task"
+  ecr_repository_name = local.ecr_repository_name
+  region = data.aws_region.current.id
+  subnets_ids = module.dev_network.public_subnets_ids
+  vpc_id = module.dev_network.vpc_id
+  docker_image_name = "tomcat:latest"//TODO FIXME
+  docker_image_strict_pull_policy = false //TODO FIXME
+  depends_on = [module.dev_network]
 }
