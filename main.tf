@@ -65,8 +65,8 @@ resource "aws_security_group" "ecs_public_sg" {
   vpc_id      = module.dev-network.vpc_id
 
   ingress {
-    from_port   = 8815
-    to_port     = 80
+    from_port   = 8080 //TODO TOMCAT
+    to_port     = 8080
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
@@ -195,11 +195,6 @@ resource "aws_ecs_task_definition" "app" {
   ])
 }
 
-locals {
-  # Объединяем все списки подсетей из разных AZ в один общий список объектов
-  all_public_subnets = flatten(values(module.dev-network.public_subnets_ids_and_cidrs))
-}
-
 resource "aws_ecs_service" "main" {
   name            = "game-sys-service"
   cluster         = aws_ecs_cluster.main.id
@@ -208,7 +203,7 @@ resource "aws_ecs_service" "main" {
   launch_type     = "FARGATE"
 
   network_configuration {
-    subnets = [for s in local.all_public_subnets : s.id]
+    subnets = module.dev-network.public_subnets_ids
     //В настройках подсети есть галочка "Auto-assign public IPv4", но для Fargate она игнорируется.
     assign_public_ip = true     # Чтобы вы могли зайти на него из браузера
     security_groups  = [aws_security_group.ecs_public_sg.id]
