@@ -28,12 +28,24 @@ module "dev_ecr_repo" {
   source                    = "git@github.com:konstantinTarletski/aws_terraform_modules.git//ecr_and_iam_role"
   ecr_repository_name       = data.terraform_remote_state.globalvars.outputs.ecr_repository_name_game_sys_test_task
   git_repository_name       = data.terraform_remote_state.globalvars.outputs.git_repository_name_game_sys_test_task
-  git_repository_owner      = "konstantinTarletski"
+  git_repository_owner      = data.terraform_remote_state.globalvars.outputs.git_repository_owner_game_sys_test_task
   git_repository_token_link = "https://token.actions.githubusercontent.com"
   ecr_force_delete          = true
-  default_tags = data.terraform_remote_state.globalvars.outputs.default_tags
+  default_tags              = data.terraform_remote_state.globalvars.outputs.default_tags
 }
 
-output "vpc_id" { value = module.dev_network.vpc_id }
-output "public_subnets_ids" { value = module.dev_network.public_subnets_ids }
-output "ecr_url" { value = module.dev_ecr_repo.aws_ecr_repository_url }
+output "vpc_id" {
+  value = module.dev_network.vpc_id
+}
+
+output "public_subnets_ids" {
+  value = module.dev_network.public_subnets_ids
+}
+
+output "ecr_url" {
+  value = module.dev_ecr_repo.aws_ecr_repository_url
+}
+
+output "git_open_id_provider_arn" {
+  value = module.dev_ecr_repo.git_open_id_provider_arn
+}
