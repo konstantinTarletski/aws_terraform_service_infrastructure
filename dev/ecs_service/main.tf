@@ -43,6 +43,12 @@ module "dev_ecs_service" {
   region                          = data.aws_region.current.id
   docker_image_strict_pull_policy = true
   application_ports               = [8815]
+  environment_variables = [
+    {
+      "name": "JAVA_TOOL_OPTIONS",
+      "value": "-Djava.rmi.server.hostname=127.0.0.1 -Dh2.bindAddress=127.0.0.1 -Dsun.net.inetaddr.ttl=0"
+    }
+  ]
 
   default_tags             = data.terraform_remote_state.globalvars.outputs.default_tags
   git_open_id_provider_arn = data.terraform_remote_state.infrastructure.outputs.git_open_id_provider_arn
