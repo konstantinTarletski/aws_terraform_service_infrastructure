@@ -46,11 +46,21 @@ data "terraform_remote_state" "ecr" {
   }
 }
 
+data "terraform_remote_state" "alb" {
+  backend = "s3"
+  config = {
+    bucket = "tarlekon-self-aws-terraform-service-infrastructure"
+    key    = "dev/game-sys-test-task/alb/terraform.tfstate"
+    region = "eu-central-1"
+  }
+}
+
+
 module "dev_ecs_service" {
   source = "git@github.com:konstantinTarletski/aws_terraform_modules.git//ecs_service_and_iam_roles"
 
   vpc_id             = data.terraform_remote_state.network.outputs.vpc_id
-  subnets_ids        = data.terraform_remote_state.network.outputs.public_subnets_ids
+  subnets_ids        = data.terraform_remote_state.network.outputs.private_subnets_ids
   ecr_repository_url = data.terraform_remote_state.ecr.outputs.ecr_url
 
   git_repository_owner = data.terraform_remote_state.globalvars.outputs.git_repository_owner_konstantin_tarletski_name
@@ -60,15 +70,11 @@ module "dev_ecs_service" {
   aws_cloudwatch_log_group        = "/ecs/game-sys-test-task"
   region                          = data.aws_region.current.id
   docker_image_strict_pull_policy = true
-  application_ports               = [8815]
-  environment_variables = [
-    {
-      "name": "JAVA_TOOL_OPTIONS",
-      "value": "-Djava.rmi.server.hostname=127.0.0.1 -Dh2.bindAddress=127.0.0.1 -Dsun.net.inetaddr.ttl=0"
-    }
-  ]
+  ecs_sg_application_ports_and_tg_arn = data.terraform_remote_state.alb.outputs.ports_and_tg_arns_map
+  ecs_sg_ingress_security_groups  = [data.terraform_remote_state.alb.outputs.alb_sg_id]
+  environment_variables           = data.terraform_remote_state.shared.outputs.environment_variables
 
-  default_tags             = data.terraform_remote_state.globalvars.outputs.default_tags
-  git_open_id_provider_arn = data.terraform_remote_state.ecr.outputs.git_open_id_provider_arn
+  default_tags                        = data.terraform_remote_state.globalvars.outputs.default_tags
+  git_open_id_provider_arn            = data.terraform_remote_state.ecr.outputs.git_open_id_provider_arn
   //depends_on = [module.dev_network, module.dev_ecr_repo]
 }
