@@ -78,3 +78,7 @@ module "dev_ecs_service" {
   git_open_id_provider_arn            = data.terraform_remote_state.ecr.outputs.git_open_id_provider_arn
   //depends_on = [module.dev_network, module.dev_ecr_repo]
 }
+
+output "ecs_sg_id" {
+  value = module.dev_ecs_service.ecs_sg_id
+}
