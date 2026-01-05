@@ -47,7 +47,7 @@ module "dev_alb" {
   alb_port_mappings             = { "8815" = { path_pattern = "/*", priority = 10, health_check = "/swagger-ui.html", is_default = true } }
   alb_sg_ingress_ports_and_sg   = {}
   //alb_sg_ingress_ports_and_cidr = { "80" = ["0.0.0.0/0"] } -- default
-  //alb_sg_egress_ports_and_sg  -- add later, see "add_link_to_sg"
+  //alb_sg_egress_ports_and_sg  -- add later, see "add_ecs_sg_to_alb_sg"
   alb_sg_egress_ports_and_cidr  = {}
 }
 
@@ -58,12 +58,11 @@ data "terraform_remote_state" "ecs" {
     key    = "dev/game-sys-test-task/ecs_and_roles/terraform.tfstate"
     region = "eu-central-1"
   }
-  depends_on             = [module.dev_alb]
 }
 
-module "add_link_to_sg" {
+module "add_ecs_sg_to_alb_sg" {
   source                 = "git@github.com:konstantinTarletski/aws_terraform_modules.git//sg_rule_constructor"
   security_group_id      = module.dev_alb.alb_sg_id
-  egress_ports_and_sg    = {"8815" = [data.terraform_remote_state.ecs.ecs_sg_id]}
+  egress_ports_and_sg    = {"8815" = [data.terraform_remote_state.ecs.outputs.ecs_sg_id]}
   depends_on             = [module.dev_alb]
 }
