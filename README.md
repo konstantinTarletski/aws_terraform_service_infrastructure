@@ -2,6 +2,7 @@
 
 ### Phase 1: Architecture & Refactoring (Current Focus)
 - [ ] **Terragrunt**
+- [ ] **Improve GithubActions** use Task Difinition update
 - [ ] **Use lockfile** not forgot to put "terraform backend use_lockfile = true" :)
 - [ ] **SSL and domain**
 - [ ] **Good readme, documentation and variables description**
@@ -25,5 +26,6 @@
 - [ ] **Lambda**
 - [ ] **Lambda CI/CD**
 - [ ] **...**
+
 
 
