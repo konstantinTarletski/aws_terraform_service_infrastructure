@@ -1,20 +1,25 @@
-## 📅 Roadmap (Q1 2026)
-
-This roadmap covers the planned infrastructure enhancements for the next 1-2 weeks.
+## 📅 Roadmap (2026)
 
 ### Phase 1: Architecture & Refactoring (Current Focus)
-- [ ] **Terragrunt Integration**: Migrate the entire stack to Terragrunt to manage cross-module dependencies (`dependency` blocks) and eliminate code duplication (DRY).
-- [ ] **State Management**: Refactor S3 backend configuration using Terragrunt's remote state auto-generation.
+- [ ] **Terragrunt**
+- [ ] **SSL and domain**
+- [ ] **Good readme, documentation and variables description**
+- [ ] **CI/CD for terraform/trragrunt** TFLint, Checkov, Atlantis, terraform test ...
+- [ ] **VPC Endpoints** for Docker, Logs, DB
+- [ ] **Rid of H2 DB** USe RDS Postgress in other closed subnet
+- [ ] **Prometheus/Grafana**
 
-### Phase 2: Security & Networking (Deep Dive)
-- [ ] **HTTPS Implementation**: Provision SSL/TLS certificates via AWS Certificate Manager (ACM) and configure HTTPS listeners on ALB.
-- [ ] **Private Connectivity**: Validate NAT Gateway traffic flow and tighten Security Group rules by replacing 0.0.0.0/0 with specific SG-to-SG references.
-- [ ] **Non-Root Execution**: Refactor Dockerfiles and ECS Task Definitions to run application processes as non-root users for enhanced container security.
+### Phase 2: Microservices/Kubernetes
+- [ ] **Add some other application 1**
+- [ ] **Kubernetes**
+- [ ] **ArgoCD**
+- [ ] **Add some other application 2**
+- [ ] **Fargate Kafka** 
+- [ ] **Microservice communcation**
 
-### Phase 3: Data & Automation
-- [ ] **Database Deployment**: Provision an RDS Instance (PostgreSQL/MySQL) within the dedicated `db_subnets` with Multi-AZ enabled.
-- [ ] **Full CI/CD Pipeline**: Enhance GitHub Actions to automate the "Build-Push-Deploy" cycle (ECR push + ECS Task Definition update).
-- [ ] **Static Analysis**: Integrate `Trivy` for vulnerability scanning and `TFLint` for Terraform code quality checks in the CI pipeline.
-
----
-*Status: In Progress - [Build -> Test -> Destroy] cycle active.*
+### Phase 3: Frontend
+- [ ] **Cloudfront**
+- [ ] **Cloudfront CI/CD**
+- [ ] **Lambda**
+- [ ] **Lambda CI/CD**
+- [ ] **...**
