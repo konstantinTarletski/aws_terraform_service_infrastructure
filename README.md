@@ -18,8 +18,10 @@
 - [ ] **Microservice communcation**
 
 ### Phase 3: Frontend
+- [ ] **Write Some React Application :)**
 - [ ] **Cloudfront**
 - [ ] **Cloudfront CI/CD**
 - [ ] **Lambda**
 - [ ] **Lambda CI/CD**
 - [ ] **...**
+
