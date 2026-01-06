@@ -1,62 +1,52 @@
-## Run project using Terraform.
+# AWS Infrastructure for Java Services (GameSys Project)
 
-### Phase 0: Done
-- [ ] **Make "gamesys-test-task" work locally**
-Fix **Dokerfile**, fix some Java problems
-- [ ] **Create ECR module**
-Create Elastic Container Repository (ECR) where to store docker files.
-Create role for pushhing image
-- [ ] **CI/CD using GitHub Actions**
-Create GitHub Actions deploying to AWS ECS using OIDC and 2 different roles
-- For deploying to ECR
-- For updateing ECS
-- [ ] **Create network module**
-This modute can generate 3 different types of subnets
-- public
-- private (have internet access thouhg NAT)
-- isolated (do not have internet access, used for DB)
-This module is "smart" and can create for one AZ -- one NAT to avoid cross AZ trafic.
-Number of subnets is not limited with number of AZ.
-And some other "smart" things to awoid some trafic and costs problems.
-- [ ] **Create SG rule constructor module**
-To simplify creating Security Groups (SG) with different parameters.
-- [ ] **Create ALB module**
-This module creates Application Load Balancer and Target Groups (TG) for each port in Docker conatainer (if more then 1)
-Creates needed SG and make it works.
-- [ ] **Create ECS module**
-Crerates Elastic Container Service (ECS).
-Creates Roles neede for deploy (used in Github Actions)
-Creates needed SG
+Project focused on building a scalable and cost-effective infrastructure in AWS. 
+Infrastructure is fully managed as code (IaC) using a modular approach.
 
 
-### Phase 1: Architecture & Refactoring (Current Focus)
-- [ ] **Terragrunt**
-- [ ] **Improve GithubActions** use Task Difinition update
-- [ ] **Use lockfile** not forgot to put "terraform backend use_lockfile = true" :)
-- [ ] **SSL and domain**
-- [ ] **Good readme, documentation and variables description**
-- [ ] **CI/CD for terraform/trragrunt** TFLint, Checkov, Atlantis, terraform test ...
-- [ ] **VPC Endpoints** for Docker (ECR), Logs, DB
-- [ ] **Rid of H2 DB** USe RDS Postgress in other closed subnet using VPC Endpoints
-- [ ] **Prometheus/Grafana**
+## 🚀 Roadmap
 
-### Phase 2: Microservices/Kubernetes
-- [ ] **Add some other application 1**
-- [ ] **Kubernetes**
+### Phase 0: Foundations (Done ✅)
+- [x] **Local Run & Dockerization**  
+  Fixed Dockerfile and Java 11 dependencies. Switched to Amazon-optimized Docker images. (other repo)
+- [x] **ECR Module**  
+  Created Elastic Container Registry (ECR). Configured IAM roles for image pushing.
+- [x] **CI/CD via GitHub Actions**  
+  Automation via OIDC (no static keys). Two roles: for ECR (push) and for ECS (update).
+- [x] **Smart Network Module**  
+  Generates 3 types of subnets: `public`, `private` (NAT), and `db` (isolated). "1 AZ = 1 NAT" logic to avoid cross-AZ traffic costs.
+- [x] **SG Rule Constructor**  
+  Technical module to simplify Security Group management using `for_each` and object maps.
+- [x] **ALB Module**  
+  Creates Application Load Balancer and Target Groups for each container port.
+- [x] **ECS Module**  
+  Deploys ECS Fargate service. Configures Task and Execution roles.
+
+### Phase 1: Architecture & Refactoring (Current Focus 🎯)
+- [ ] **Terragrunt Migration**  
+  Transition to Terragrunt for better dependency management and DRY code.
+- [ ] **Advanced GitHub Actions**  
+  Shift to proper updates via `task-definition.json` and Rolling Update logic.
+- [ ] **Native S3 State Locking**  
+  Enable `use_lockfile = true` (Terraform 1.10+)
+- [ ] **SSL & Domain**  
+  Configure HTTPS via ACM certificates and Route53.
+- [ ] **VPC Endpoints**  
+  Setup private links for ECR, Logs, and S3 to save costs on NAT traffic.
+- [ ] **RDS Integration**  
+  Move from H2 to PostgreSQL in the isolated DB subnet.
+- [ ] **Atlantis for GitOps IaC**  
+  Deploy **Atlantis** to automate Terraform/Terragrunt runs via Pull Requests.
+- [ ] **IaC Quality Gate**  
+  Implement `terraform test`, `TFLint`, and `Checkov`.
+
+### Phase 2: Microservices / Kubernetes
+- [ ] **Add Microservice App 1 and 2**
+- [ ] **Kubernetes (EKS)**
 - [ ] **ArgoCD**
-- [ ] **Add some other application 2**
-- [ ] **Fargate Kafka** 
-- [ ] **Microservice communcation**
+- [ ] **Fargate Kafka / Inter-service communication**
 
-### Phase 3: Frontend
-- [ ] **Write Some React Application :)**
-- [ ] **Cloudfront**
-- [ ] **Cloudfront CI/CD**
-- [ ] **Lambda**
-- [ ] **Lambda CI/CD**
-- [ ] **...**
-
-
-
-
-
+### Phase 3: Frontend & Serverless
+- [ ] **React Application**
+- [ ] **Cloudfront CDN & CI/CD**
+- [ ] **Lambda for background tasks & CI/CD**
