@@ -13,10 +13,10 @@ Create GitHub Actions deploying to AWS ECS using OIDC and 2 different roles
 - [ ] **Create network module**
 This modute can generate 3 different types of subnets
 - public
-- private (have DB access thouhg NAT)
-- isolated (do not have DB access, used for DB)
-This module is smart and can create for one AZ -- one NAT to avoid cross AZ trafic.
-Nubner of subnets is not limited with nimber of ZA.
+- private (have internet access thouhg NAT)
+- isolated (do not have internet access, used for DB)
+This module is "smart" and can create for one AZ -- one NAT to avoid cross AZ trafic.
+Number of subnets is not limited with number of AZ.
 And some other "smart" things to awoid some trafic and costs problems.
 - [ ] **Create SG rule constructor module**
 To simplify creating Security Groups (SG) with different parameters.
@@ -55,6 +55,7 @@ Creates needed SG
 - [ ] **Lambda**
 - [ ] **Lambda CI/CD**
 - [ ] **...**
+
 
 
 
