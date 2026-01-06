@@ -67,16 +67,21 @@ module "dev_ecs_service" {
   git_repository_name  = data.terraform_remote_state.shared.outputs.git_repository_name_game_sys_test_task
   ecr_repository_name  = data.terraform_remote_state.shared.outputs.ecr_repository_name_game_sys_test_task
 
-  aws_cloudwatch_log_group        = "/ecs/game-sys-test-task"
-  region                          = data.aws_region.current.id
-  docker_image_strict_pull_policy = true
+  aws_cloudwatch_log_group            = "/ecs/game-sys-test-task"
+  region                              = data.aws_region.current.id
+  docker_image_strict_pull_policy     = true
   ecs_sg_application_ports_and_tg_arn = data.terraform_remote_state.alb.outputs.ports_and_tg_arns_map
-  ecs_sg_ingress_security_groups  = [data.terraform_remote_state.alb.outputs.alb_sg_id]
-  environment_variables           = data.terraform_remote_state.shared.outputs.environment_variables
-
+  ecs_sg_ingress_ports_and_sg         = { "8815" = [data.terraform_remote_state.alb.outputs.alb_sg_id] }
+  environment_variables               = data.terraform_remote_state.shared.outputs.environment_variables
   default_tags                        = data.terraform_remote_state.globalvars.outputs.default_tags
   git_open_id_provider_arn            = data.terraform_remote_state.ecr.outputs.git_open_id_provider_arn
-  //depends_on = [module.dev_network, module.dev_ecr_repo]
+}
+
+module "add_ecs_sg_to_alb_sg" {
+  source              = "git@github.com:konstantinTarletski/aws_terraform_modules.git//sg_rule_constructor"
+  security_group_id   = data.terraform_remote_state.alb.outputs.alb_sg_id
+  egress_ports_and_sg_named = { "8815-add_ecs_sg_to_alb_sg" = {port = "8815", sg_id = module.dev_ecs_service.ecs_sg_id}}
+  depends_on          = [module.dev_ecs_service]
 }
 
 output "ecs_sg_id" {

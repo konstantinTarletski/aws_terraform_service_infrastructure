@@ -51,18 +51,16 @@ module "dev_alb" {
   alb_sg_egress_ports_and_cidr  = {}
 }
 
-data "terraform_remote_state" "ecs" {
-  backend = "s3"
-  config = {
-    bucket = "tarlekon-self-aws-terraform-service-infrastructure"
-    key    = "dev/game-sys-test-task/ecs_and_roles/terraform.tfstate"
-    region = "eu-central-1"
-  }
+output "alb_sg_id" {
+  value = module.dev_alb.alb_sg_id
 }
 
-module "add_ecs_sg_to_alb_sg" {
-  source                 = "git@github.com:konstantinTarletski/aws_terraform_modules.git//sg_rule_constructor"
-  security_group_id      = module.dev_alb.alb_sg_id
-  egress_ports_and_sg    = {"8815" = [data.terraform_remote_state.ecs.outputs.ecs_sg_id]}
-  depends_on             = [module.dev_alb]
+output "ports_with_target_groups" {
+  value = module.dev_alb.ports_with_target_groups
+  description = "Example: ['80080' = 'arn:tg-123']"
+}
+
+output "ports_and_tg_arns_map" {
+  value = module.dev_alb.ports_and_tg_arns_map
+  description = "Example: ['80080' = {tg_arn = 'arn:tg-123'}]"
 }
