@@ -2,6 +2,7 @@
 
 ### Phase 1: Architecture & Refactoring (Current Focus)
 - [ ] **Terragrunt**
+- [ ] **Use lockfile** not forgot to put "terraform backend use_lockfile = true" :)
 - [ ] **SSL and domain**
 - [ ] **Good readme, documentation and variables description**
 - [ ] **CI/CD for terraform/trragrunt** TFLint, Checkov, Atlantis, terraform test ...
@@ -24,4 +25,5 @@
 - [ ] **Lambda**
 - [ ] **Lambda CI/CD**
 - [ ] **...**
+
 
