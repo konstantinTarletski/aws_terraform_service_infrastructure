@@ -21,6 +21,8 @@ Infrastructure is fully managed as code (IaC) using a modular approach.
   Creates Application Load Balancer and Target Groups for each container port.
 - [x] **ECS Module**  
   Deploys ECS Fargate service. Configures Task and Execution roles.
+- [ ] **SSL & Domain**  
+  Configure HTTPS via ACM certificates and Route53 and DNS/domain
 
 ### Phase 1: Architecture & Refactoring (Current Focus 🎯)
 - [ ] **Terragrunt Migration**  
@@ -29,8 +31,6 @@ Infrastructure is fully managed as code (IaC) using a modular approach.
   Shift to proper updates via `task-definition.json` and Rolling Update logic.
 - [ ] **Native S3 State Locking**  
   Enable `use_lockfile = true` (Terraform 1.10+)
-- [ ] **SSL & Domain**  
-  Configure HTTPS via ACM certificates and Route53.
 - [ ] **VPC Endpoints**  
   Setup private links for ECR, Logs, and S3 to save costs on NAT traffic.
 - [ ] **RDS Integration**  
@@ -50,3 +50,4 @@ Infrastructure is fully managed as code (IaC) using a modular approach.
 - [ ] **React Application**
 - [ ] **Cloudfront CDN & CI/CD**
 - [ ] **Lambda for background tasks & CI/CD**
+
