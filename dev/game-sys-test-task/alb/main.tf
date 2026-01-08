@@ -44,10 +44,11 @@ module "dev_alb" {
   project_name                  = data.terraform_remote_state.shared.outputs.git_repository_name_game_sys_test_task
   alb_http_port                      = 80
   alb_port_mappings             = { "8815" = { host = "/*", priority = 10, health_check = "/swagger-ui.html", is_default = true } }
-  alb_sg_ingress_ports_and_sg   = {}
-  //alb_sg_ingress_ports_and_cidr = { "80" = ["0.0.0.0/0"] } -- default
-  //alb_sg_egress_ports_and_sg  -- add later, see "add_ecs_sg_to_alb_sg"
-  alb_sg_egress_ports_and_cidr  = {}
+  //alb_sg_ingress_ports_and_sg   = {} -- default
+  //alb_sg_ingress_ports_and_cidr = { "80" = ["0.0.0.0/0"], "443" = ["0.0.0.0/0"] } -- default for HTTPS
+  //alb_sg_egress_ports_and_sg  -- added in "next step", see "dev/ecs_and_roles/" module add_ecs_sg_to_alb_sg
+  //alb_sg_egress_ports_and_cidr  = {} -- default
+  existing_domain_name = "tarlekon.click"
 }
 
 output "alb_sg_id" {
