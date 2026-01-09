@@ -57,7 +57,7 @@ data "terraform_remote_state" "alb" {
 
 
 module "dev_ecs_service" {
-  source = "git@github.com:konstantinTarletski/aws_terraform_modules.git//ecs_service_and_iam_roles"
+  source = "git@github.com:konstantinTarletski/aws_terraform_modules.git//ecs_service_and_iam_roles?ref=v1.0.0"
 
   vpc_id             = data.terraform_remote_state.network.outputs.vpc_id
   subnets_ids        = data.terraform_remote_state.network.outputs.private_subnets_ids
@@ -78,7 +78,7 @@ module "dev_ecs_service" {
 }
 
 module "add_ecs_sg_to_alb_sg" {
-  source              = "git@github.com:konstantinTarletski/aws_terraform_modules.git//sg_rule_constructor"
+  source              = "git@github.com:konstantinTarletski/aws_terraform_modules.git//sg_rule_constructor?ref=v1.0.0"
   security_group_id   = data.terraform_remote_state.alb.outputs.alb_sg_id
   egress_ports_and_sg_named = { "8815-add_ecs_sg_to_alb_sg" = {port = "8815", sg_id = module.dev_ecs_service.ecs_sg_id}}
   depends_on          = [module.dev_ecs_service]
