@@ -16,7 +16,8 @@ data "terraform_remote_state" "globalvars" {
 }
 
 module "dev_network" {
-  source                = "git@github.com:konstantinTarletski/aws_terraform_modules.git//network?ref=v1.0.0"
+  //source                = "git@github.com:konstantinTarletski/aws_terraform_modules.git//network?ref=v1.0.0"
+  source                = "git@github.com:konstantinTarletski/aws_terraform_modules.git//network?ref=feature/alb-refactoring-improved"
   environment           = "dev"
   db_subnets_cidrs      = [] //"10.0.201.0/24",-- default value
   //private_subnets_cidrs = [ "10.0.101.0/24",] -- default value

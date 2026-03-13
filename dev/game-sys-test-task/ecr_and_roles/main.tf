@@ -27,7 +27,9 @@ data "terraform_remote_state" "shared" {
 }
 
 module "dev_ecr_repo" {
-  source                    = "git@github.com:konstantinTarletski/aws_terraform_modules.git//ecr_and_iam_role"
+  //source                    = "git@github.com:konstantinTarletski/aws_terraform_modules.git//ecr_and_iam_role"
+  source                = "git@github.com:konstantinTarletski/aws_terraform_modules.git//ecr_and_iam_role?ref=feature/alb-refactoring-improved"
+
   ecr_repository_name       = data.terraform_remote_state.shared.outputs.ecr_repository_name_game_sys_test_task
   git_repository_name       = data.terraform_remote_state.shared.outputs.git_repository_name_game_sys_test_task
   git_repository_owner      = data.terraform_remote_state.globalvars.outputs.git_repository_owner_konstantin_tarletski_name
