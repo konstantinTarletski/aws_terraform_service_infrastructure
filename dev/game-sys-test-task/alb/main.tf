@@ -44,7 +44,6 @@ module "dev_alb" {
   project_name      = data.terraform_remote_state.shared.outputs.git_repository_name_game_sys_test_task
   alb_port_mappings = { "8815" = { host = "game-sys", priority = 10, health_check = "/swagger-ui.html", is_default = true } }
   //alb_sg_ingress_ports_and_sg   = {} -- default
-  alb_sg_ingress_ports_and_cidr = { 8815 = ["0.0.0.0/0"] } //Need to automate !!!
 
 
   //alb_sg_egress_ports_and_sg  -- added in "next step", see "dev/ecs_and_roles/" module add_ecs_sg_to_alb_sg
@@ -56,8 +55,9 @@ module "dev_alb" {
   }*/
 
   //alb_sg_egress_ports_and_cidr  = {} -- default
-  //existing_domain_name = "tarlekon.click"
+  existing_domain_name = "tarlekon.click"
   //alb_sg_ingress_ports_and_cidr = { "80" = ["0.0.0.0/0"], "443" = ["0.0.0.0/0"] } -- default for HTTPS
+  //alb_sg_ingress_ports_and_cidr = { 8815 = ["0.0.0.0/0"] } //Need to automate !!!
 }
 
 output "alb_sg_id" {
