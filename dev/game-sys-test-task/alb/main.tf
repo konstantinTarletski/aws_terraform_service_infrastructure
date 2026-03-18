@@ -36,7 +36,7 @@ data "terraform_remote_state" "shared" {
 }
 
 module "dev_alb" {
-  source            = "git@github.com:konstantinTarletski/aws_terraform_modules.git//alb_and_ssl?ref=feature/alb-refactoring-improved"
+  source            = "git@github.com:konstantinTarletski/aws_terraform_modules.git//alb_and_ssl?ref=v1.1.0"
   default_tags      = data.terraform_remote_state.globalvars.outputs.default_tags
   vpc_id            = data.terraform_remote_state.network.outputs.vpc_id
   subnets_ids       = data.terraform_remote_state.network.outputs.public_subnets_ids
