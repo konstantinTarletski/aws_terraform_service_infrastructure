@@ -23,7 +23,7 @@ https://game-sys.tarlekon.click/swagger-ui.html
   Creates Application Load Balancer and Target Groups for each container port.
 - [x] **ECS Module**  
   Deploys ECS Fargate service. Configures Task and Execution roles.
-- [ ] **SSL & Domain**  
+- [X] **SSL & Domain**  
   Configure HTTPS via ACM certificates and Route53 and DNS/domain
 
 ### Phase 1: Architecture & Refactoring (Current Focus 🎯)
