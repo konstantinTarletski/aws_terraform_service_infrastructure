@@ -1,12 +1,10 @@
 terraform {
   backend "s3" {
-    bucket = "tarlekon-self-aws-terraform-service-infrastructure"
+    bucket = var.state_bucket
+    region = var.region
     key    = "dev/_global/terraform.tfstate"
-    region = "eu-central-1"
   }
 }
-
-provider "aws" {}
 
 output "git_repository_owner_konstantin_tarletski_name" {
   value = "konstantinTarletski"
