@@ -9,3 +9,11 @@ dependency "alb" {
 dependency "ecr" {
   config_path = "../ecr_and_roles"
 }
+
+dependency "_shared" {
+  config_path = "../_shared"
+}
+
+dependency "_global" {
+  config_path = "../../_global"
+}
