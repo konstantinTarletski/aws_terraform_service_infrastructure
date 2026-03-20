@@ -1,17 +1,9 @@
-terraform {
-  backend "s3" {
-    bucket = "tarlekon-self-aws-terraform-service-infrastructure"
-    key    = "dev/network/terraform.tfstate"
-    region = "eu-central-1"
-  }
-}
-
 data "terraform_remote_state" "globalvars" {
   backend = "s3"
   config = {
-    bucket = "tarlekon-self-aws-terraform-service-infrastructure"
+    bucket = var.state_bucket
     key    = "dev/_global/terraform.tfstate"
-    region = "eu-central-1"
+    region = var.region
   }
 }
 
