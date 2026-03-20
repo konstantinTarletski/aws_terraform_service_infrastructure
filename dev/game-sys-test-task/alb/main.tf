@@ -1,15 +1,7 @@
-terraform {
-  backend "s3" {
-    bucket = var.state_bucket
-    region = var.region
-    key    = "dev/game-sys-test-task/alb/terraform.tfstate"
-  }
-}
-
 data "terraform_remote_state" "globalvars" {
   backend = "s3"
   config = {
-    bucket = "tarlekon-self-aws-terraform-service-infrastructure"
+    bucket = var.state_bucket
     key    = "dev/_global/terraform.tfstate"
     region = var.region
   }
@@ -18,7 +10,7 @@ data "terraform_remote_state" "globalvars" {
 data "terraform_remote_state" "network" {
   backend = "s3"
   config = {
-    bucket = "tarlekon-self-aws-terraform-service-infrastructure"
+    bucket = var.state_bucket
     key    = "dev/network/terraform.tfstate"
     region = var.region
   }
@@ -27,7 +19,7 @@ data "terraform_remote_state" "network" {
 data "terraform_remote_state" "shared" {
   backend = "s3"
   config = {
-    bucket = "tarlekon-self-aws-terraform-service-infrastructure"
+    bucket = var.state_bucket
     key    = "dev/game-sys-test-task/_shared/terraform.tfstate"
     region = var.region
   }

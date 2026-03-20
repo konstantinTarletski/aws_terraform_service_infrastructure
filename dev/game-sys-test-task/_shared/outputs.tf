@@ -1,11 +1,3 @@
-terraform {
-  backend "s3" {
-    bucket = var.state_bucket
-    region = var.region
-    key    = "dev/game-sys-test-task/_shared/terraform.tfstate"
-  }
-}
-
 output "ecr_repository_name_game_sys_test_task" {
   value = "game-sys-test-task"
 }

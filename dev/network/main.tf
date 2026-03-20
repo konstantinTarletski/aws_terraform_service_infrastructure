@@ -1,15 +1,7 @@
-terraform {
-  backend "s3" {
-    bucket = var.state_bucket
-    region = var.region
-    key    = "dev/network/terraform.tfstate"
-  }
-}
-
 data "terraform_remote_state" "globalvars" {
   backend = "s3"
   config = {
-    bucket = "tarlekon-self-aws-terraform-service-infrastructure"
+    bucket = var.state_bucket
     key    = "dev/_global/terraform.tfstate"
     region = var.region
   }
