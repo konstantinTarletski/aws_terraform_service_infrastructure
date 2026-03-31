@@ -1,14 +1,5 @@
 data "aws_region" "current" {}
 
-data "terraform_remote_state" "network" {
-  backend = "s3"
-  config = {
-    bucket = var.state_bucket
-    key    = "dev/network/terraform.tfstate"
-    region = var.region
-  }
-}
-
 data "terraform_remote_state" "ecr" {
   backend = "s3"
   config = {
@@ -30,8 +21,8 @@ data "terraform_remote_state" "alb" {
 module "dev_ecs_service" {
   source = "git@github.com:konstantinTarletski/aws_terraform_modules.git//ecs_service_and_iam_roles?ref=v1.1.0"
 
-  vpc_id             = data.terraform_remote_state.network.outputs.vpc_id
-  subnets_ids        = data.terraform_remote_state.network.outputs.private_subnets_ids
+  vpc_id             = var.vpc_id
+  subnets_ids        = var.public_subnets_ids
   ecr_repository_url = data.terraform_remote_state.ecr.outputs.ecr_url
 
   git_repository_owner = var.git_repository_owner_name

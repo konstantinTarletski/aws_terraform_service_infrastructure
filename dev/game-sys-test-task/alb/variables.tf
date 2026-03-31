@@ -22,3 +22,13 @@ variable "git_repository_name_game_sys_test_task" {
   description = "GIT repository name for game-sys-test-task"
   type        = string
 }
+
+variable "vpc_id" {
+  type = string
+  description = "Virtual private cloud (VPC) ID"
+}
+
+variable "public_subnets_ids" {
+  type = list(string)
+  description = "Virtual private cloud (VPC) subnets IDs"
+}
