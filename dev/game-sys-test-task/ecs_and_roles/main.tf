@@ -1,28 +1,20 @@
 data "aws_region" "current" {}
 
-data "terraform_remote_state" "network" {
-  backend = "s3"
-  config = {
-    bucket = var.state_bucket
-    key    = "dev/network/terraform.tfstate"
-    region = var.region
-  }
-}
-
-data "terraform_remote_state" "globalvars" {
-  backend = "s3"
-  config = {
-    bucket = var.state_bucket
-    key    = "dev/_global/terraform.tfstate"
-    region = var.region
-  }
-}
-
 data "terraform_remote_state" "shared" {
   backend = "s3"
   config = {
     bucket = var.state_bucket
     key    = "dev/game-sys-test-task/_shared/terraform.tfstate"
+    region = var.region
+  }
+}
+
+
+data "terraform_remote_state" "network" {
+  backend = "s3"
+  config = {
+    bucket = var.state_bucket
+    key    = "dev/network/terraform.tfstate"
     region = var.region
   }
 }
@@ -52,7 +44,7 @@ module "dev_ecs_service" {
   subnets_ids        = data.terraform_remote_state.network.outputs.private_subnets_ids
   ecr_repository_url = data.terraform_remote_state.ecr.outputs.ecr_url
 
-  git_repository_owner = data.terraform_remote_state.globalvars.outputs.git_repository_owner_konstantin_tarletski_name
+  git_repository_owner = var.git_repository_owner_konstantin_tarletski_name
   git_repository_name  = data.terraform_remote_state.shared.outputs.git_repository_name_game_sys_test_task
   ecr_repository_name  = data.terraform_remote_state.shared.outputs.ecr_repository_name_game_sys_test_task
 
@@ -62,7 +54,7 @@ module "dev_ecs_service" {
   ecs_sg_application_ports_and_tg_arn = data.terraform_remote_state.alb.outputs.ports_and_tg_arns_map
   ecs_sg_ingress_ports_and_sg         = { "8815" = [data.terraform_remote_state.alb.outputs.alb_sg_id] }
   environment_variables               = data.terraform_remote_state.shared.outputs.environment_variables
-  default_tags                        = data.terraform_remote_state.globalvars.outputs.default_tags
+  default_tags                        = var.default_tags
   git_open_id_provider_arn            = data.terraform_remote_state.ecr.outputs.git_open_id_provider_arn
 }
 

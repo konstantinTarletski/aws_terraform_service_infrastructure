@@ -1,12 +1,3 @@
-data "terraform_remote_state" "globalvars" {
-  backend = "s3"
-  config = {
-    bucket = var.state_bucket
-    key    = "dev/_global/terraform.tfstate"
-    region = "eu-central-1"
-  }
-}
-
 data "terraform_remote_state" "shared" {
   backend = "s3"
   config = {
@@ -21,10 +12,10 @@ module "dev_ecr_repo" {
 
   ecr_repository_name       = data.terraform_remote_state.shared.outputs.ecr_repository_name_game_sys_test_task
   git_repository_name       = data.terraform_remote_state.shared.outputs.git_repository_name_game_sys_test_task
-  git_repository_owner      = data.terraform_remote_state.globalvars.outputs.git_repository_owner_konstantin_tarletski_name
+  git_repository_owner      = var.git_repository_owner_konstantin_tarletski_name
   git_repository_token_link = "https://token.actions.githubusercontent.com"
   ecr_force_delete          = true
-  default_tags              = data.terraform_remote_state.globalvars.outputs.default_tags
+  default_tags              = var.default_tags
 }
 
 output "ecr_url" {
