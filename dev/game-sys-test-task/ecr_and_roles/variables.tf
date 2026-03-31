@@ -13,7 +13,17 @@ variable "default_tags" {
   type        = map(string)
 }
 
-variable "git_repository_owner_konstantin_tarletski_name" {
+variable "git_repository_owner_name" {
   description = "Git repository owner name"
+  type        = string
+}
+
+variable "git_repository_name_game_sys_test_task" {
+  description = "GIT repository name for game-sys-test-task"
+  type        = string
+}
+
+variable "ecr_repository_name_game_sys_test_task" {
+  description = "ECR repository name for game-sys-test-task"
   type        = string
 }

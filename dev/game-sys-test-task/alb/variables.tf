@@ -17,3 +17,8 @@ variable "environment" {
   description = "Environment name (dev, test, prod)"
   type        = string
 }
+
+variable "git_repository_name_game_sys_test_task" {
+  description = "GIT repository name for game-sys-test-task"
+  type        = string
+}

@@ -1,8 +1,7 @@
 locals {
-  region                                         = "eu-central-1"
-  state_bucket                                   = "tarlekon-self-aws-terraform-service-infrastructure"
-  environment                                    = "dev"
-  git_repository_owner_konstantin_tarletski_name = "konstantinTarletski"
+  region       = "eu-central-1"
+  state_bucket = "tarlekon-self-aws-terraform-service-infrastructure"
+  environment  = "dev"
   default_tags = {
     Manufactor = "terraform"
     Design     = "tarlekon"
@@ -11,11 +10,10 @@ locals {
 }
 
 inputs = {
-  region                                         = local.region
-  state_bucket                                   = local.state_bucket
-  environment                                    = local.environment
-  git_repository_owner_konstantin_tarletski_name = local.git_repository_owner_konstantin_tarletski_name
-  default_tags                                   = local.default_tags
+  region       = local.region
+  state_bucket = local.state_bucket
+  environment  = local.environment
+  default_tags = local.default_tags
 }
 
 generate "provider" {
