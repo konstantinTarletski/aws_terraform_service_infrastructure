@@ -9,7 +9,7 @@ module "dev_ecr_repo" {
   default_tags              = var.default_tags
 }
 
-output "ecr_url" {
+output "aws_ecr_repository_url" {
   value = module.dev_ecr_repo.aws_ecr_repository_url
 }
 

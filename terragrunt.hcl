@@ -33,6 +33,7 @@ remote_state {
     key     = "${path_relative_to_include()}/terraform.tfstate"
     region  = local.region
     encrypt = true
+    //TODO uncomment when ready/needed
     #use_lockfile = true
   }
   generate = {

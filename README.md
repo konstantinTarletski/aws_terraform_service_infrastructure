@@ -1,3 +1,6 @@
+> **Architectural Note:** This is a custom-built project developed as part of an in-depth study of Terraform, Terragrunt, and modern DevOps practices. As an evolving educational environment, it is used to experiment with various IaC patterns. You may encounter TODOs, temporary comments, or open MRs intended for refactoring. The goal is continuous learning and hands-on improvement of infrastructure architecture.
+
+
 # AWS Infrastructure for Java Services (GameSys Project)
 
 Project focused on building a scalable and cost-effective infrastructure in AWS. 
@@ -27,7 +30,7 @@ https://game-sys.tarlekon.click/swagger-ui.html
   Configure HTTPS via ACM certificates and Route53 and DNS/domain
 
 ### Phase 1: Architecture & Refactoring (Current Focus 🎯)
-- [ ] **Terragrunt Migration**  
+- [X] **Terragrunt Migration**  
   Transition to Terragrunt for better dependency management and DRY code.
 - [ ] **Advanced GitHub Actions**  
   Shift to proper updates via `task-definition.json` and Rolling Update logic.
