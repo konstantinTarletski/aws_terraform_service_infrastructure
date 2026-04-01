@@ -4,6 +4,7 @@ include "root" {
 
 dependency "network" {
   config_path = "../../network"
+
   mock_outputs = {
     vpc_id = "vpc-mock-12345"
     public_subnets_ids = ["subnet-mock-1", "subnet-mock-2"]

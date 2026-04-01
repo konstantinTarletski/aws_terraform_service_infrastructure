@@ -1,13 +1,3 @@
-variable "region" {
-  description = "AWS Region for resources and provider"
-  type        = string
-}
-
-variable "state_bucket" {
-  description = "S3 bucket for terraform state"
-  type        = string
-}
-
 variable "default_tags" {
   description = "Default tags"
   type        = map(string)
@@ -44,4 +34,26 @@ variable "vpc_id" {
 variable "public_subnets_ids" {
   type = list(string)
   description = "Virtual private cloud (VPC) subnets IDs"
+}
+
+variable "aws_ecr_repository_url" {
+  type = string
+  description = "AWS ECR repository URL"
+}
+
+//TODO check later
+variable "ports_and_tg_arns_map" {
+  type        = map(object({ tg_arn = string }))
+  description = "Application ports allowed for ingress for ECS 8080 default for tomcat 'tg_arn' - for \"link\" with load_balancer"
+}
+
+//TODO check later
+variable "alb_sg_id" {
+  type = string
+  description = "ALB security group ID, to connect with ECS security group"
+}
+
+variable "git_open_id_provider_arn" {
+  type = string
+  description = "Git OpenID provider ARN"
 }
