@@ -40,6 +40,8 @@ https://game-sys.tarlekon.click/swagger-ui.html
   Setup private links for ECR, Logs, and S3 to save costs on NAT traffic.
 - [ ] **RDS Integration**  
   Move from H2 to PostgreSQL in the isolated DB subnet.
+- [ ] **VPN Access to DB**  
+  DB will run in subnet without internet, and do access it I need to build VPN
 - [ ] **Atlantis for GitOps IaC**  
   Deploy **Atlantis** to automate Terraform/Terragrunt runs via Pull Requests.
 - [ ] **IaC Quality Gate**  
