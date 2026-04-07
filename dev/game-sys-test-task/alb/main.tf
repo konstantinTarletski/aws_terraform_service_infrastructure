@@ -5,8 +5,8 @@ module "dev_alb" {
   subnets_ids          = var.public_subnets_ids
   environment          = var.environment
   project_name         = var.git_repository_name_game_sys_test_task
-  alb_port_mappings    = { "8815" = { host = "game-sys", priority = 10, health_check = "/swagger-ui.html" } }
-  existing_domain_name = "tarlekon.click"
+  alb_port_mappings    = var.alb_port_mappings
+  existing_domain_name = var.domain_name
   alb_sg_cidr          = ["0.0.0.0/0"]
 }
 
