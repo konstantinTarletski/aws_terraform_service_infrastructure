@@ -1,10 +1,16 @@
 locals {
-  git_repository_owner_name = "konstantinTarletski"
-  ecr_repository_name_game_sys_test_task = "game-sys-test-task"
-  git_repository_name_game_sys_test_task = "game-sys-test-task"
-  domain_name = "tarlekon.click"
+  git_repository_owner_name                 = "konstantinTarletski"
+  ecr_repository_name_game_sys_test_task    = "game-sys-test-task"
+  git_repository_name_game_sys_test_task    = "game-sys-test-task"
+  domain_name                               = "tarlekon.click"
+  game_sys_application_port                 = "8815"
+  game_sys_application_host                 = "game-sys"
+  game_sys_application_access_cidr = ["0.0.0.0/0"]
+  game_sys_application_cloudwatch_log_group = "/ecs/game-sys-test-task"
   game_sys_test_task_application_port_mappings = {
-    "8815" = { host = "game-sys", priority = 10, health_check = "/swagger-ui.html" }
+    (local.game_sys_application_port) = {
+      host = local.game_sys_application_host, priority = 10, health_check = "/swagger-ui.html"
+    }
   }
   environment_variables = [
     {

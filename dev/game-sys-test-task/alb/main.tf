@@ -7,7 +7,7 @@ module "dev_alb" {
   project_name         = var.git_repository_name_game_sys_test_task
   alb_port_mappings    = var.alb_port_mappings
   existing_domain_name = var.domain_name
-  alb_sg_cidr          = ["0.0.0.0/0"]
+  alb_sg_cidr          = var.game_sys_application_access_cidr
 }
 
 output "alb_sg_id" {

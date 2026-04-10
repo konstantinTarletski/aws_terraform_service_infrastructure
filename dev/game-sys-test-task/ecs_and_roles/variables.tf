@@ -41,13 +41,21 @@ variable "aws_ecr_repository_url" {
   description = "AWS ECR repository URL"
 }
 
-//TODO check later
+variable "game_sys_application_cloudwatch_log_group" {
+  type = string
+  description = "AWS cloudwatch log group for gameSys"
+}
+
+variable "game_sys_application_port" {
+  type = string
+  description = "gameSys application port"
+}
+
 variable "ports_and_tg_arns_map" {
   type        = map(object({ tg_arn = string }))
   description = "Application ports allowed for ingress for ECS 8080 default for tomcat 'tg_arn' - for \"link\" with load_balancer"
 }
 
-//TODO check later
 variable "alb_sg_id" {
   type = string
   description = "ALB security group ID, to connect with ECS security group"

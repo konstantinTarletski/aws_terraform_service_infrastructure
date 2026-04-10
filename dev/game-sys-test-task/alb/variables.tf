@@ -36,3 +36,8 @@ variable "domain_name" {
   description = "Domain name"
   type        = string
 }
+
+variable "game_sys_application_access_cidr" {
+  description = "CIDR for game-sys-application access (ALB)"
+  type        = list(string)
+}
