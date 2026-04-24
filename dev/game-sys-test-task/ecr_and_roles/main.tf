@@ -4,7 +4,7 @@ module "dev_ecr_repo" {
   ecr_repository_name       = var.ecr_repository_name_game_sys_test_task
   git_repository_name       = var.git_repository_name_game_sys_test_task
   git_repository_owner      = var.git_repository_owner_name
-  git_repository_token_link = "https://token.actions.githubusercontent.com"
+  git_repository_token_link = var.git_repository_token_link
   ecr_force_delete          = true
   default_tags              = var.default_tags
 }

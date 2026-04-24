@@ -18,6 +18,9 @@ locals {
 
 inputs = {
   git_repository_name_game_sys_test_task = local.app_vars.locals.git_repository_name_game_sys_test_task
+  alb_port_mappings                      = local.app_vars.locals.game_sys_test_task_application_port_mappings
+  domain_name                            = local.app_vars.locals.domain_name
+  game_sys_application_access_cidr       = local.app_vars.locals.game_sys_application_access_cidr
   vpc_id                                 = dependency.network.outputs.vpc_id
   public_subnets_ids                     = dependency.network.outputs.public_subnets_ids
 }

@@ -11,11 +11,11 @@ module "dev_ecs_service" {
   git_repository_name  = var.git_repository_name_game_sys_test_task
   ecr_repository_name  = var.ecr_repository_name_game_sys_test_task
 
-  aws_cloudwatch_log_group            = "/ecs/game-sys-test-task"
+  aws_cloudwatch_log_group            = var.game_sys_application_cloudwatch_log_group
   region                              = data.aws_region.current.id
   docker_image_strict_pull_policy     = true
   ecs_sg_application_ports_and_tg_arn = var.ports_and_tg_arns_map
-  ecs_sg_ingress_ports_and_sg         = { "8815" = [var.alb_sg_id] }
+  ecs_sg_ingress_ports_and_sg         = { (var.game_sys_application_port) = [var.alb_sg_id] }
   environment_variables               = var.environment_variables
   default_tags                        = var.default_tags
   git_open_id_provider_arn            = var.git_open_id_provider_arn
@@ -24,7 +24,7 @@ module "dev_ecs_service" {
 module "add_ecs_sg_to_alb_sg" {
   source                    = "git@github.com:konstantinTarletski/aws_terraform_modules.git//sg_rule_constructor?ref=v1.1.0"
   security_group_id         = var.alb_sg_id
-  egress_ports_and_sg_named = { "8815-add_ecs_sg_to_alb_sg" = { port = "8815", sg_id = module.dev_ecs_service.ecs_sg_id } }
+  egress_ports_and_sg_named = { "${var.game_sys_application_port}-add_ecs_sg_to_alb_sg" = { port = var.game_sys_application_port, sg_id = module.dev_ecs_service.ecs_sg_id } }
   depends_on                = [module.dev_ecs_service]
 }
 

@@ -22,3 +22,22 @@ variable "public_subnets_ids" {
   type = list(string)
   description = "Virtual private cloud (VPC) subnets IDs"
 }
+
+variable "alb_port_mappings" {
+  type = map(object({
+    host = string
+    priority = number
+    health_check = string
+  }))
+  description = "Multiple port mappings for application in ALB"
+}
+
+variable "domain_name" {
+  description = "Domain name"
+  type        = string
+}
+
+variable "game_sys_application_access_cidr" {
+  description = "CIDR for game-sys-application access (ALB)"
+  type        = list(string)
+}
